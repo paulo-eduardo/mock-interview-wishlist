@@ -2,6 +2,9 @@ import Head from "next/head";
 import { Geist, Geist_Mono } from "next/font/google";
 import styles from "@/styles/Home.module.css";
 
+import { Header, ProductList } from "@/components/";
+import { WishlistProvider } from "@/context/WishlistContext";
+
 const geistSans = Geist({
   variable: "--font-geist-sans",
   subsets: ["latin"],
@@ -12,7 +15,52 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
-export default function Home() {
+export type Product = {
+  id: string;
+  name: string;
+  price: number;
+  imageUrl: string;
+};
+
+export const getServerSideProps = () => {
+  const mockProducts = [
+    {
+      id: "prod_1",
+      name: "Wireless Noise-Cancelling Headphones",
+      price: 249.99,
+      imageUrl:
+        "https://images.unsplash.com/photo-1546868871-7041f2a55e12?w=500",
+    },
+    {
+      id: "prod_2",
+      name: "Smartwatch Series 8",
+      price: 399.0,
+      imageUrl:
+        "https://images.unsplash.com/photo-1546868871-7041f2a55e12?w=500",
+    },
+    {
+      id: "prod_3",
+      name: "Portable Bluetooth Speaker",
+      price: 89.99,
+      imageUrl:
+        "https://images.unsplash.com/photo-1546868871-7041f2a55e12?w=500",
+    },
+    {
+      id: "prod_4",
+      name: "Mechanical Gaming Keyboard",
+      price: 129.99,
+      imageUrl:
+        "https://images.unsplash.com/photo-1546868871-7041f2a55e12?w=500",
+    },
+  ];
+  return {
+    props: {
+      products: mockProducts,
+    },
+  };
+};
+
+export default function Home({ products }: { products: Product[] }) {
   return (
     <>
       <Head>
@@ -25,7 +73,10 @@ export default function Home() {
         className={`${styles.page} ${geistSans.variable} ${geistMono.variable}`}
       >
         <main className={styles.main}>
-          <h1>Welcome to your wishlist</h1>
+          <WishlistProvider>
+            <Header />
+            <ProductList products={products} />
+          </WishlistProvider>
         </main>
       </div>
     </>
